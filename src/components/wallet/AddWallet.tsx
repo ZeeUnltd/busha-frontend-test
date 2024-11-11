@@ -17,6 +17,7 @@ interface Props {
   refresh?: ReactEventHandler;
 }
 const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL as string;
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -42,7 +43,7 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
     setFormError(null);
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3090/wallets");
+      const response = await fetch(`${baseUrl}/wallets`);
       if (!response.ok) {
         setNetworkError("Network Error");
       }
@@ -65,7 +66,7 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
     e.preventDefault();
     setCreating(true);
     try {
-      const resp: any = await fetch("http://localhost:3090/accounts", {
+      const resp: any = await fetch(`${baseUrl}/accounts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

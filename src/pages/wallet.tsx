@@ -13,6 +13,7 @@ const Wallet: React.FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const baseUrl = process.env.REACT_APP_BASE_URL as string;
 
   const NetworkErrorFallBack = () => {
     return (
@@ -29,7 +30,7 @@ const Wallet: React.FC = () => {
     let cancelRequest = false;
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3090/accounts");
+      const response = await fetch(`${baseUrl}/accounts`);
       if (!response.ok) {
         setError(true);
       }
