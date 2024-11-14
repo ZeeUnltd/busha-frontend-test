@@ -332,6 +332,9 @@ nav form {
 .h-\[400px\] {
   height: 400px;
 }
+.container.dashboard {
+  padding-top: 2em;
+}
 .dashboard {
   display: flex;
   justify-content: center;
@@ -535,7 +538,6 @@ button {
   width: 32px;
   background: #303030;
   border-radius: 30px;
-
 }
 .mt-6 {
   margin-top: 1.5rem /* 24px */;
@@ -546,14 +548,24 @@ button {
 .p-3 {
   padding: 0.75rem /* 12px */;
 }
+.py-6 {
+  padding-top: 1.5rem /* 24px */;
+  padding-bottom: 1.5rem /* 24px */;
+}
+.py-10 {
+  padding-top: 2rem /* 32px */;
+  padding-bottom: 2rem /* 32px */;
+}
 .modal-select {
   width: 392px;
-height: 64px;
-top: 280px;
-left: 1026px;
-gap: 0px;
-border: 1px 0px 0px 0px;
-opacity: 0px;
+  height: 64px;
+  top: 280px;
+  left: 1026px;
+  gap: 0px;
+  border: 1px 0px 0px 0px;
+  border-radius: 5px;
+  padding: 1em;
+
 
 }
 button:disabled {

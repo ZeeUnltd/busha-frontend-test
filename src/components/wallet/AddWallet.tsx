@@ -133,11 +133,11 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
                     <NetworkErrorFallBack />
                   ) : (
                     <ErrorSpace fallBack={<NetworkErrorFallBack />}>
-                      <form onSubmit={(e) => handleSubmitForm(e)}>
+                      <form onSubmit={(e) => handleSubmitForm(e)} className="py-10">
                         <label htmlFor="wallet">Select Wallet</label>
                         <div>
                           <select
-                            className="p-3 modal-select"
+                            className="modal-select"
                             value={selectedAccount || ""}
                             id="wallet"
                             onChange={(e) => handleInputChange(e)}
