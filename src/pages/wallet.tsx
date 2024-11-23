@@ -7,6 +7,7 @@ import Modal from "../components/shared/Modal";
 import { Button } from "../components/shared/button";
 import NetworkErrorIcon from "../components/icons/NetworkErrorIcon";
 import { useDashboardContext } from "../components/shared/DashboardProvider";
+import { IWallet } from "../components/wallet/types/IWallet.interface";
 
 const Wallet: React.FC = () => {
   const {oldAccounts} = useDashboardContext();
@@ -37,9 +38,9 @@ const Wallet: React.FC = () => {
       }
       if (!cancelRequest) {
         const data = await response.json();
-        const myData:any= new Set([...data, ...oldAccounts])
-        console.log({myData});
-        setAccounts(data);
+        // const myData: IWallet[] = [...new Set([...data, ...oldAccounts])];
+        console.log({oldAccounts});
+        setAccounts([...data, ...oldAccounts]);
       }
       const data = await response.json();
       // setAccounts(data);
@@ -55,10 +56,10 @@ const Wallet: React.FC = () => {
     const ac = new AbortController()
      fetchAccounts()
     return () => ac.abort();
-  }, []);
+  }, [oldAccounts]);
   return (
     <ErrorSpace fallBack={<NetworkErrorFallBack />}>
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<Loader size={83.37} />}>
         <>
           <div className="flex justify-between items-center rounded-full font-medium">
             <h2> Wallets</h2>
@@ -69,7 +70,7 @@ const Wallet: React.FC = () => {
               {loading ? (
                 <div className="modal flex flex-col items-center justify-center h-screen">
                   <div>
-                    <Loader />
+                    <Loader size={83.37}/>
                   </div>
                 </div>
               ) : error ? (

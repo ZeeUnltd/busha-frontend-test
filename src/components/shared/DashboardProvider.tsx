@@ -9,7 +9,7 @@ type DashboardContextType ={
   activeMenu: string;
   setActiveMenu: (newTitle: string) => void;
   oldAccounts: IWallet[];
-  setOldAccounts: (data: any) => void;
+  handleSetOldAccount: (data:IWallet) => void;
 }
 
 // Create the context
@@ -20,11 +20,13 @@ const DashboardContext = createContext<DashboardContextType>(
 // Create the context provider
 export const DashboardProvider: React.FC = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [oldAccounts, setOldAccounts] = useState([]);
+  const [oldAccounts, setOldAccounts] = useState<IWallet[]>([]);
   const [activeMenu, setActiveMenu] = useState(
     window.location?.pathname.replace("/", "") ?? "Wallet"
   );
-
+  const handleSetOldAccount = (data: IWallet) => {
+    setOldAccounts((prev) => [...prev, data]);
+  }
   return (
     <DashboardContext.Provider
       value={{
@@ -33,7 +35,7 @@ export const DashboardProvider: React.FC = ({ children }) => {
         activeMenu,
         setActiveMenu,
         oldAccounts,
-        setOldAccounts,
+        handleSetOldAccount,
       }}
     >
       <ErrorSpace fallBack={"Network Error, Try Again"}>

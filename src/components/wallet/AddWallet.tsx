@@ -5,12 +5,18 @@ import Loader from "../shared/Loader";
 import ErrorSpace from "./ErrorSpace";
 import NetworkErrorIcon from "../icons/NetworkErrorIcon";
 import { useDashboardContext } from "../shared/DashboardProvider";
+import { IWallet } from "./types/IWallet.interface";
 
 interface Account {
   currency: string;
   name: string;
-  type: string;
   imgURL: string;
+  id?: string;
+  balance?: number;
+  pending_balance?: number;
+  type: string;
+  push_amount?: number;
+  payout?: boolean;
 }
 interface Props {
   setClose?: ReactEventHandler;
@@ -18,12 +24,11 @@ interface Props {
 }
 const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
   const baseUrl = process.env.REACT_APP_BASE_URL as string;
-  const { setOldAccounts } = useDashboardContext();
-  const [accounts, setAccounts] = useState<Account[]>([]);
+  const { handleSetOldAccount } = useDashboardContext();
+  const [accounts, setAccounts] = useState<IWallet[]>([]);
   const [loading, setLoading] = useState<Boolean>(true);
   const [creating, setCreating] = useState<Boolean>(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
-  const [newAccount, setNewAccount] = useState(null);
   const [networkError, setNetworkError] = useState<String | null>("");
   const [formError, setFormError] = useState<String | null>(null);
 
@@ -63,10 +68,7 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
   };
   const handleInputChange = (e: any) => {
     e.preventDefault();
-    console.log(e.target.value);
-    
     setSelectedAccount(e.target && e.target?.value);
-    
   };
   const handleSubmitForm = async (e: any) => {
     e.preventDefault();
@@ -89,12 +91,21 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
       }
       const data = await resp.json();
       // setAccounts([...accounts, data]);
-      const newAccount = accounts.filter(item => item.currency === selectedAccount)
-      console.log({newAccount});
-      
-      setOldAccounts((prev: any) => [...prev, newAccount]);
+
+      const newAccount: IWallet = accounts.filter(
+        (item) => item.currency === selectedAccount
+      )[0];
+      const uniqueId = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+      newAccount.id = uniqueId;
+      newAccount.balance = 0;
+      newAccount.pending_balance = 0;
+      newAccount.type = "digital";
+      newAccount.payout = false;
+      console.log({ newAccount });
+
+      handleSetOldAccount(newAccount);
       setCreating(false);
-      refresh();
+      // refresh();
       setClose();
     } catch (error: any) {
       setCreating(false);
@@ -136,7 +147,7 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
                   {loading ? (
                     <div className="modal flex flex-col items-center justify-center h-screen">
                       <div>
-                        <Loader />
+                        <Loader size={83.37} />
                       </div>
                     </div>
                   ) : networkError ? (
@@ -158,7 +169,7 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
                             <option value="" disabled>
                               Select Wallet
                             </option>
-                            {accounts?.map((account: Account) => (
+                            {accounts?.map((account: IWallet) => (
                               <option
                                 key={`${account.currency}-key-account`}
                                 value={account.currency}
