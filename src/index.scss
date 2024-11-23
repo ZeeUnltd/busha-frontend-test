@@ -100,6 +100,22 @@ nav {
     justify-content: center;
   }
 }
+.currency-avatar{
+  height: 2em;
+  width: 2em;
+  border-radius: 100%;
+  background-color: #05A357;
+  display: flex;
+  place-content: center;
+  place-items: center;
+  font-weight: 600;
+  margin-right: 0.5em;
+  margin-bottom: 1em;
+
+  & img {
+    height: 1.2em;
+  }
+}
 
 .menu-toggle {
   display: none;
@@ -427,6 +443,10 @@ nav form {
   align-items: center;
 }
 
+.text-md {
+  font-size: xx-large;
+}
+
 .justify-between {
   justify-content: space-between;
 }
@@ -457,6 +477,11 @@ button {
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
   }
+}
+button.outline:hover {
+  background: rgba(154, 165, 177, 0.3);
+  padding: 0.6em;
+  border-radius: 5px;
 }
 .flex-col {
   flex-direction: column;
@@ -552,6 +577,9 @@ button {
   padding-top: 1.5rem /* 24px */;
   padding-bottom: 1.5rem /* 24px */;
 }
+.p-6 {
+  padding: 20px;
+}
 .py-10 {
   padding-top: 2rem /* 32px */;
   padding-bottom: 2rem /* 32px */;
@@ -565,8 +593,9 @@ button {
   border: 1px 0px 0px 0px;
   border-radius: 5px;
   padding: 1em;
-
-
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 button:disabled {
   opacity: 30%;

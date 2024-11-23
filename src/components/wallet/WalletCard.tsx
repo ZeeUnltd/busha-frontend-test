@@ -1,51 +1,73 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, {
+  useEffect,
+  useState,
+  lazy,
+  Suspense,
+  ReactEventHandler,
+} from "react";
 import RightAngleIcon from "../icons/rightAngleIcon";
+import { IWallet } from "./types/IWallet.interface";
 import PropTypes from "prop-types";
 import accounts from "../../../db/accounts";
+import Avatar from "./Avatar";
+import Wallet from "./wallet.class";
 
-export interface WalletCardProps {
-  id: string;
-  currency: string;
-  hold: string;
-  pending_balance: number;
-  balance: string;
-  name: string;
-  type: string;
-  deposit: boolean;
-  payout: boolean;
-  imgURL: string;
-}
+export type WalletCardProps = IWallet;
+const formatCurrency = (amount: number, currency: string) => {
+  const formatter = new Intl.NumberFormat("en-US", {
+    // style: "currency",
+    // currency
+  });
+  let result;
+  try {
+    result = formatter.format(amount);
+  } catch (error: any) {
+    return `${+amount.toLocaleString()} ${currency}`;
+  }
+  return currency + " " + result;
+};
 
-const WalletCard: React.FC<WalletCardProps> = ({
-  id,
-  currency,
-  hold,
-  pending_balance,
-  balance,
-  name,
-  type,
-  deposit,
-  payout,
-  imgURL,
-}) => {
+const WalletCard: React.FC<WalletCardProps> = (account) => {
+  const [fallbackImg, setFallbackImg] = useState(false);
+  const data = new Wallet(account);
+  const handleImageError = (e: ReactEventHandler) => {
+    console.log({ e });
+    setFallbackImg(true);
+  };
   return (
     <>
-      <div className="card" id={id}>
+      <div className="card" id={account?.id}>
         <div className="w-full flex justify-start">
-          <img
+          {/* <img
             className="h-10 w-10 rounded-full"
             src={imgURL}
             alt="user-avatar"
           />
+          <Avatar name={name} color={'#fff'} />
           {name}
+           */}
+          <div className="currency-avatar" style={{ backgroundColor: data?.custom?.color }} >
+            <img
+              className="h-10 w-10 rounded-full"
+              src={data?.custom?.icon || account?.imgURL}
+              alt="user-avatar"
+              onError={(e) => handleImageError}
+            />
+          </div>
+          {fallbackImg ? <Avatar name={account.name} color={"#fff"} /> : null}
+          {account.name}
         </div>
         <div className="w-full flex justify-start">
-          <span className="amount" title='accounts.balance'>{balance} {currency}</span>
+          <span className="amount" title="accounts.balance">
+            {formatCurrency(+account.balance, account.currency)}
+          </span>
         </div>
 
         <div className="mt-6 flex justify-end">
           <div className="rounded-full card-arrow items-center">
-            <RightAngleIcon />
+            <button className="btn outline">
+              <RightAngleIcon />
+            </button>
           </div>
         </div>
       </div>

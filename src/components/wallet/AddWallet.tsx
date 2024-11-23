@@ -4,7 +4,7 @@ import { Button } from "../shared/button";
 import Loader from "../shared/Loader";
 import ErrorSpace from "./ErrorSpace";
 import NetworkErrorIcon from "../icons/NetworkErrorIcon";
-// import PropTypes from "prop-types";
+import { useDashboardContext } from "../shared/DashboardProvider";
 
 interface Account {
   currency: string;
@@ -18,9 +18,10 @@ interface Props {
 }
 const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
   const baseUrl = process.env.REACT_APP_BASE_URL as string;
+  const { setOldAccounts } = useDashboardContext();
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
+  const [loading, setLoading] = useState<Boolean>(true);
+  const [creating, setCreating] = useState<Boolean>(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [networkError, setNetworkError] = useState<String | null>("");
   const [formError, setFormError] = useState<String | null>(null);
@@ -52,6 +53,7 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
       setLoading(false);
     } catch (error: any) {
       setNetworkError("Network Error");
+    } finally {
       setLoading(false);
     }
   };
@@ -79,6 +81,7 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
       if (!resp.ok) {
         // setFormError(`${resp?.statusText}` ?? "Network Error");
         setCreating(false);
+        setOldAccounts((prev: any) => [...prev, selectedAccount]);
         return setFormError(`Network Error`);
       }
       const data = await resp.json();
@@ -133,11 +136,14 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
                     <NetworkErrorFallBack />
                   ) : (
                     <ErrorSpace fallBack={<NetworkErrorFallBack />}>
-                      <form onSubmit={(e) => handleSubmitForm(e)} className="py-10">
+                      <form
+                        onSubmit={(e) => handleSubmitForm(e)}
+                        className="py-10"
+                      >
                         <label htmlFor="wallet">Select Wallet</label>
                         <div>
                           <select
-                            className="modal-select"
+                            className="modal-select te"
                             value={selectedAccount || ""}
                             id="wallet"
                             onChange={(e) => handleInputChange(e)}
@@ -155,14 +161,16 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
                             ))}
                           </select>
                         </div>
-                        <Button
-                          type="submit"
-                          className="rounded"
-                          disabled={creating}
-                        >
-                          {creating ? "Loading..." : "Create Wallet"}
-                        </Button>
-                        {formError}
+                        <div className="w-full text-center">
+                          <Button
+                            type="submit"
+                            className="rounded"
+                            disabled={!!creating}
+                          >
+                            {creating ? "Loading..." : "Create Wallet"}
+                          </Button>
+                          {formError}
+                        </div>
                       </form>
                     </ErrorSpace>
                   )}
@@ -175,11 +183,5 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
     </>
   );
 };
-
-// Wallet.propTypes = {
-//   username: PropTypes.string.isRequired,
-//   age: PropTypes.number.isRequired,
-//   isLoggedIn: PropTypes.bool.isRequired,
-// };
 
 export default AddWallet;

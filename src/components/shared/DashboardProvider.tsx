@@ -1,17 +1,15 @@
-import React, {
-  Suspense,
-  createContext,
-  useState,
-  useContext,
-} from "react";
+import React, { Suspense, createContext, useState, useContext } from "react";
+import { IWallet } from "../wallet/types/IWallet.interface";
 import Loader from "./Loader";
 import ErrorSpace from "../wallet/ErrorSpace";
 // Define the context interface
-interface DashboardContextType {
+type DashboardContextType ={
   isSidebarOpen: boolean;
-  setSidebarOpen: () => void;
+  setSidebarOpen: (status: boolean) => void;
   activeMenu: string;
-  // setTitle: (newTitle: string) => void;
+  setActiveMenu: (newTitle: string) => void;
+  oldAccounts: IWallet[];
+  setOldAccounts: (data: any) => void;
 }
 
 // Create the context
@@ -22,7 +20,10 @@ const DashboardContext = createContext<DashboardContextType>(
 // Create the context provider
 export const DashboardProvider: React.FC = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const activeMenu = window.location?.pathname.replace("/", "") ?? "";
+  const [oldAccounts, setOldAccounts] = useState([]);
+  const [activeMenu, setActiveMenu] = useState(
+    window.location?.pathname.replace("/", "") ?? "Wallet"
+  );
 
   return (
     <DashboardContext.Provider
@@ -30,9 +31,12 @@ export const DashboardProvider: React.FC = ({ children }) => {
         isSidebarOpen,
         setSidebarOpen: () => setSidebarOpen(!isSidebarOpen),
         activeMenu,
+        setActiveMenu,
+        oldAccounts,
+        setOldAccounts,
       }}
     >
-      <ErrorSpace fallBack={'Network Error, Try Again'}>
+      <ErrorSpace fallBack={"Network Error, Try Again"}>
         <Suspense fallback={<Loader />}>{children}</Suspense>
       </ErrorSpace>
     </DashboardContext.Provider>

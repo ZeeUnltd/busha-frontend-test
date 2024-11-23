@@ -6,10 +6,11 @@ import Loader from "../components/shared/Loader";
 import Modal from "../components/shared/Modal";
 import { Button } from "../components/shared/button";
 import NetworkErrorIcon from "../components/icons/NetworkErrorIcon";
-// import PropTypes from "prop-types";
+import { useDashboardContext } from "../components/shared/DashboardProvider";
 
 const Wallet: React.FC = () => {
-  const [accounts, setAccounts] = useState<WalletCardProps[]>([]);
+  const {oldAccounts} = useDashboardContext();
+  const [accounts, setAccounts] = useState<WalletCardProps[]>(oldAccounts);
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -59,7 +60,7 @@ const Wallet: React.FC = () => {
         <>
           <div className="flex justify-between items-center rounded-full font-medium">
             <h2> Wallets</h2>
-            <button onClick={() => setOpenModal(true)}>+ Add new wallet</button>
+            <button className="outline" onClick={() => setOpenModal(true)}>+ Add new wallet</button>
           </div>
           {
             <>
