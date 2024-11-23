@@ -23,6 +23,7 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
   const [loading, setLoading] = useState<Boolean>(true);
   const [creating, setCreating] = useState<Boolean>(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
+  const [newAccount, setNewAccount] = useState(null);
   const [networkError, setNetworkError] = useState<String | null>("");
   const [formError, setFormError] = useState<String | null>(null);
 
@@ -62,7 +63,10 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
   };
   const handleInputChange = (e: any) => {
     e.preventDefault();
+    console.log(e.target.value);
+    
     setSelectedAccount(e.target && e.target?.value);
+    
   };
   const handleSubmitForm = async (e: any) => {
     e.preventDefault();
@@ -85,7 +89,10 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
       }
       const data = await resp.json();
       // setAccounts([...accounts, data]);
-      setOldAccounts((prev: any) => [...prev, selectedAccount]);
+      const newAccount = accounts.filter(item => item.currency === selectedAccount)
+      console.log({newAccount});
+      
+      setOldAccounts((prev: any) => [...prev, newAccount]);
       setCreating(false);
       refresh();
       setClose();
