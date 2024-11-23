@@ -81,11 +81,11 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
       if (!resp.ok) {
         // setFormError(`${resp?.statusText}` ?? "Network Error");
         setCreating(false);
-        setOldAccounts((prev: any) => [...prev, selectedAccount]);
         return setFormError(`Network Error`);
       }
       const data = await resp.json();
       // setAccounts([...accounts, data]);
+      setOldAccounts((prev: any) => [...prev, selectedAccount]);
       setCreating(false);
       refresh();
       setClose();
