@@ -6,6 +6,8 @@ import ErrorSpace from "./ErrorSpace";
 import NetworkErrorIcon from "../icons/NetworkErrorIcon";
 import { useDashboardContext } from "../shared/DashboardProvider";
 import { IWallet } from "./types/IWallet.interface";
+import CautionIcon from "../../assets/icons/caution.svg";
+import styled from "styled-components";
 
 interface Account {
   currency: string;
@@ -85,12 +87,10 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
       });
 
       if (!resp.ok) {
-        // setFormError(`${resp?.statusText}` ?? "Network Error");
         setCreating(false);
         return setFormError(`Network Error`);
       }
       const data = await resp.json();
-      // setAccounts([...accounts, data]);
 
       const newAccount: IWallet = accounts.filter(
         (item) => item.currency === selectedAccount
@@ -101,7 +101,6 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
       newAccount.pending_balance = 0;
       newAccount.type = "digital";
       newAccount.payout = false;
-      console.log({ newAccount });
 
       handleSetOldAccount(newAccount);
       setCreating(false);
@@ -187,7 +186,12 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
                           >
                             {creating ? "Loading..." : "Create Wallet"}
                           </Button>
-                          {formError}
+                          {formError && (
+                            <ErrorTab className=" mt-6">
+                              <img src={CautionIcon} alt="Caution icon" />
+                              {formError}
+                            </ErrorTab>
+                          )}
                         </div>
                       </form>
                     </ErrorSpace>
@@ -203,3 +207,15 @@ const AddWallet: React.FC<Props> = ({ setClose, refresh }: any) => {
 };
 
 export default AddWallet;
+
+const ErrorTab = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding: 13px 20px;
+  gap: 12px;
+  background: #fff4f4;
+  border: 1px solid #e0b3b2;
+  border-radius: 8px;
+`;

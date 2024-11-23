@@ -38,8 +38,6 @@ const Wallet: React.FC = () => {
       }
       if (!cancelRequest) {
         const data = await response.json();
-        // const myData: IWallet[] = [...new Set([...data, ...oldAccounts])];
-        console.log({oldAccounts});
         setAccounts([...data, ...oldAccounts]);
       }
       const data = await response.json();
